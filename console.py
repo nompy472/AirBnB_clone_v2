@@ -119,6 +119,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
+        # Extracts a class name and parameters
         args_list = args.split()
         class_name = args_list[0]
         params = args_list[1:]
@@ -127,23 +128,27 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
 
+        # Creates an instance of the specified class
         new_instance = HBNBCommand.classes[class_name]()
 
+        # Parses and sets parameters for the instance
         for param in params:
             key_val = param.split('=')
             if len(key_val) != 2:
                 print(f"Invalid parameter: {param}")
                 continue
 
-        key, val = key_val
-        key = key.replace('_', ' ').replace('\"', '')
-        val = val.replace('\"', '')
+            key, val = key_val
+            key = key.replace('_', ' ').replace('\"', '')
+            val = val.replace('\"', '')
 
-        if key in HBNBCommand.types:
-            val = HBNBCommand.types[key](val)
+            # Checks the type of the attribute and cast accordingly
+            if key in HBNBCommand.types:
+                val = HBNBCommand.types[key](val)
 
-        setattr(new_instance, key, val)
+            setattr(new_instance, key, val)
 
+        # Saves the instance and print its ID
         new_instance.save()
         print(new_instance.id)
         storage.save()
